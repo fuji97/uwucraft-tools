@@ -1,86 +1,146 @@
-# UwUCraft 21 Mod Management
+# UwUCraft Tools - Refactored Structure
 
-Simple scripts to manage Minecraft mods using packwiz CLI based on a `custom.yml` configuration.
+This project has been refactored to provide a unified, modular approach to mod and server management for UwUCraft projects.
 
-## Quick Start
+## 🚀 Quick Start
 
-```powershell
-# Apply all changes from custom.yml
-./apply-mods.ps1
+Use the new unified wrapper:
 
-# Preview changes without applying them
-./apply-mods.ps1 --dry-run
+```bash
+# Apply mod changes from custom.yml
+./uwucraft-tools.ps1 mods
 
-# Apply changes without prompts (non-interactive)
-./apply-mods.ps1 --force
+# Deploy server
+./uwucraft-tools.ps1 deploy
 
-# Only add new mods
-./apply-mods.ps1 --add-only
-
-# Only remove mods
-./apply-mods.ps1 --remove-only
+# Show help
+./uwucraft-tools.ps1 help
 ```
 
-## Usage
+## 📖 Usage Guide
 
-The scripts read mod definitions from `custom.yml` and use packwiz commands to add/remove mods:
+### Mod Management
 
+#### Basic Mod Operations
+```bash
+# Apply all changes from custom.yml
+./uwucraft-tools.ps1 mods
+
+# Only add mods
+./uwucraft-tools.ps1 mods --add
+
+# Only remove mods  
+./uwucraft-tools.ps1 mods --remove
+
+# Preview changes without applying
+./uwucraft-tools.ps1 mods --dry-run
+
+# Apply changes without prompts
+./uwucraft-tools.ps1 mods --force
+```
+
+#### Advanced Mod Management
+```bash
+# List all mods
+./uwucraft-tools.ps1 advanced --list
+
+# Sync with custom.yml (add missing mods)
+./uwucraft-tools.ps1 advanced --sync
+
+# Remove specific mod
+./uwucraft-tools.ps1 advanced --remove --mod-name "Chunky"
+
+# Preview sync operation
+./uwucraft-tools.ps1 advanced --sync --dry-run
+```
+
+### Server Deployment
+
+```bash
+# Basic deployment
+./uwucraft-tools.ps1 deploy
+
+# Use specific port
+./uwucraft-tools.ps1 deploy --port 8080
+
+# Keep packwiz serve running
+./uwucraft-tools.ps1 deploy --keep-serving
+
+# Custom install directory
+./uwucraft-tools.ps1 deploy --install-dir "my-server"
+
+# Skip download if bootstrap exists
+./uwucraft-tools.ps1 deploy --skip-download
+```
+
+## 📋 Configuration
+
+### custom.yml Structure
 ```yaml
 add:
   curseforge:
-    - name: "Mod Name"
-      url: "https://www.curseforge.com/minecraft/mc-mods/mod-slug"
+    - name: "JEI"
+      url: "https://www.curseforge.com/minecraft/mc-mods/jei"
+    - name: "OptiFine"
+      url: "https://www.curseforge.com/minecraft/mc-mods/optifine"
   modrinth:
-    - name: "Modrinth Mod"
-      url: "https://modrinth.com/mod/mod-slug"
+    - name: "Lithium"
+      url: "https://modrinth.com/mod/lithium"
 
 remove:
   curseforge:
-    - "Mod Name to Remove"
+    - "Old Mod Name"
   modrinth:
-    - "Modrinth Mod to Remove"
+    - "Another Old Mod"
 ```
 
-## Available Launchers
+### Using Module Functions Directly
 
-- **`apply-mods.cmd`** - Windows batch file (recommended for Windows)
-- **`apply-mods.ps1`** - PowerShell script (cross-platform)
-
-Both launchers support the same options:
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--dry-run` | `-n` | Preview changes without applying them |
-| `--force` | `-f` | Apply changes without prompts |
-| `--add-only` | | Only add mods (skip removals) |
-| `--remove-only` | | Only remove mods (skip additions) |
-| `--help` | `-h` | Show help message |
-
-## Examples
+You can also import the module and use functions directly:
 
 ```powershell
-# Basic usage
-./apply-mods.ps1
+Import-Module .\UwUCraftTools.psm1
 
-# See what would happen
-./apply-mods.ps1 -n
-
-# Run without any user prompts
-./apply-mods.ps1 -f
-
-# Only add new mods from custom.yml
-./apply-mods.ps1 --add-only
-
-# Show help
-./apply-mods.ps1 --help
+# Use any exported function
+Invoke-ModOperations -ConfigFile "custom.yml" -DryRun $true
+Invoke-ServerDeployment -Port 8080
 ```
 
-## Requirements
+### Getting Help
 
-- **packwiz CLI** - Must be installed and in PATH
-- **PowerShell** - For .ps1 launcher (usually pre-installed on Windows)
-- **custom.yml** - Configuration file with mod definitions
+```bash
+# Show comprehensive help
+./uwucraft-tools.ps1 help
 
-## Full Documentation
+# Get help for specific functions
+Get-Help Invoke-ModOperations -Full
+```
 
-See the [full scripting documentation](scripts/MOD-MANAGEMENT-README.md) for detailed documentation, troubleshooting, and advanced usage.
+## 📝 Examples
+
+### Complete Workflow Example
+```bash
+# 1. List current mods and config
+./uwucraft-tools.ps1 advanced --list
+
+# 2. Preview what would change
+./uwucraft-tools.ps1 mods --dry-run
+
+# 3. Apply changes
+./uwucraft-tools.ps1 mods --force
+
+# 4. Deploy server
+./uwucraft-tools.ps1 deploy --port 8080
+
+# 5. Verify everything worked
+./uwucraft-tools.ps1 advanced --list
+```
+
+### Custom Configuration Example
+```bash
+# Use custom config file
+./uwucraft-tools.ps1 mods --config "configs/dev-mods.yml"
+
+# Deploy to custom directory
+./uwucraft-tools.ps1 deploy --install-dir "dev-server"
+```
